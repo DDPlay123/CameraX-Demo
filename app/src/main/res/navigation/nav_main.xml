@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/firstStartFragment">
+
+    <fragment
+        android:id="@+id/firstStartFragment"
+        android:name="mai.project.cameraxapp.fragments.FirstStartFragment"
+        android:label="fragment_first_start"
+        tools:layout="@layout/fragment_first_start">
+        <action
+            android:id="@+id/action_firstStartFragment_to_takePhotoDemoFragment"
+            app:destination="@id/takePhotoDemoFragment" />
+        <action
+            android:id="@+id/action_firstStartFragment_to_captureVideoDemoFragment"
+            app:destination="@id/captureVideoDemoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/takePhotoDemoFragment"
+        android:name="mai.project.cameraxapp.fragments.TakePhotoDemoFragment"
+        android:label="fragment_take_photo_demo"
+        tools:layout="@layout/fragment_take_photo_demo" />
+
+    <fragment
+        android:id="@+id/captureVideoDemoFragment"
+        android:name="mai.project.cameraxapp.fragments.CaptureVideoDemoFragment"
+        android:label="fragment_capture_video_demo"
+        tools:layout="@layout/fragment_capture_video_demo" />
+</navigation>

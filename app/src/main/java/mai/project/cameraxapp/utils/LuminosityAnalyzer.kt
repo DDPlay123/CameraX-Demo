@@ -1,4 +1,4 @@
-package mai.project.cameraxapp
+package mai.project.cameraxapp.utils
 
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
