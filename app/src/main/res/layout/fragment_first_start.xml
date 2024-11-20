@@ -11,10 +11,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/take_photo_demo"
-        app:layout_constraintBottom_toTopOf="@+id/btnCaptureVideoDemo"
+        app:layout_constraintBottom_toTopOf="@+id/btnTakePhotoSpecificArea"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/btnTakePhotoSpecificArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/take_photo_specific_area"
+        app:layout_constraintBottom_toTopOf="@+id/btnCaptureVideoDemo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTakePhotoDemo"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
@@ -26,6 +38,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnTakePhotoDemo" />
+        app:layout_constraintTop_toBottomOf="@+id/btnTakePhotoSpecificArea" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

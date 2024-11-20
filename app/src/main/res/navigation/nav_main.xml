@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_firstStartFragment_to_captureVideoDemoFragment"
             app:destination="@id/captureVideoDemoFragment" />
+        <action
+            android:id="@+id/action_firstStartFragment_to_takeSpecificAreaPictureFragment"
+            app:destination="@id/takeSpecificAreaPictureFragment" />
     </fragment>
 
     <fragment
@@ -29,4 +32,10 @@
         android:name="mai.project.cameraxapp.fragments.CaptureVideoDemoFragment"
         android:label="fragment_capture_video_demo"
         tools:layout="@layout/fragment_capture_video_demo" />
+
+    <fragment
+        android:id="@+id/takeSpecificAreaPictureFragment"
+        android:name="mai.project.cameraxapp.fragments.TakeSpecificAreaPictureFragment"
+        android:label="fragment_take_specific_area_picture"
+        tools:layout="@layout/fragment_take_specific_area_picture" />
 </navigation>

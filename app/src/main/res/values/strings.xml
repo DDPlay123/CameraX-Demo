@@ -2,6 +2,7 @@
     <string name="app_name">CameraXApp</string>
 
     <string name="take_photo_demo">拍照-Demo</string>
+    <string name="take_photo_specific_area">拍照-指定區域</string>
     <string name="capture_video_demo">錄影-Demo</string>
 
 
@@ -12,6 +13,7 @@
     <string name="photo_average_luma">平均亮度：%f</string>
     <string name="video_captured_successful">影片擷取成功：%s</string>
     <string name="video_capture_error">影片擷取失敗</string>
+    <string name="restricted_area">限制區域</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

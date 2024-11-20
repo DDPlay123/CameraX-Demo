@@ -46,6 +46,10 @@ class FirstStartFragment : Fragment() {
             navController.navigate(R.id.action_firstStartFragment_to_takePhotoDemoFragment)
         }
 
+        btnTakePhotoSpecificArea.setOnClickListener {
+            navController.navigate(R.id.action_firstStartFragment_to_takeSpecificAreaPictureFragment)
+        }
+
         btnCaptureVideoDemo.setOnClickListener {
             navController.navigate(R.id.action_firstStartFragment_to_captureVideoDemoFragment)
         }
