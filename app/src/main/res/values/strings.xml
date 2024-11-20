@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">CameraXApp</string>
+    <string name="take_photo">拍照</string>
+    <string name="start_capture">開始錄影</string>
+    <string name="stop_capture">停止錄影</string>
+
+    <string name="permission_not_allow">權限未允許，請重新啟動</string>
+    <string name="photo_saved_successful">照片儲存成功：%s</string>
+    <string name="photo_save_error">照片儲存失敗</string>
+    <string name="photo_average_luma">平均亮度：%f</string>
+    <string name="video_captured_successful">影片擷取成功：%s</string>
+    <string name="video_capture_error">影片擷取失敗</string>
+</resources>
