@@ -6,6 +6,7 @@
     <string name="capture_video_demo">錄影-Demo</string>
 
 
+    <string name="press_again_to_exit">再點擊一下返回離開</string>
     <string name="permission_not_allow">權限未允許，請重新啟動</string>
     <string name="camera_launch_error">啟動相機失敗</string>
     <string name="photo_saved_successful">照片儲存成功：%s</string>
@@ -14,6 +15,11 @@
     <string name="video_captured_successful">影片擷取成功：%s</string>
     <string name="video_capture_error">影片擷取失敗</string>
     <string name="restricted_area">限制區域</string>
+    <string name="capture_success">擷取成功</string>
+    <string name="savePhotoOrPreview">儲存圖片 或是 預覽圖片</string>
+    <string name="cancel">取消</string>
+    <string name="save">儲存</string>
+    <string name="preview">預覽</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

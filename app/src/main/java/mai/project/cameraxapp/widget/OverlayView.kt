@@ -7,7 +7,10 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class OverlayView(
+/**
+ * 繪製一層矩型的 View
+ */
+class OverlayView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : View(context, attrs) {

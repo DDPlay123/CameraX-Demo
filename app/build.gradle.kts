@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.navigation.safeArgs)
 }
 
 android {
@@ -50,4 +51,5 @@ dependencies {
 
     implementation(libs.bundles.navigation)
     implementation(libs.bundles.camerax)
+    implementation(libs.androidx.window)
 }

@@ -1,13 +1,8 @@
 package mai.project.cameraxapp.fragments
 
-import android.content.ContentValues
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -21,39 +16,27 @@ import androidx.camera.video.VideoRecordEvent
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import mai.project.cameraxapp.R
+import mai.project.cameraxapp.base.BaseFragment
 import mai.project.cameraxapp.databinding.FragmentCaptureVideoDemoBinding
-import mai.project.cameraxapp.utils.Constants
+import mai.project.cameraxapp.utils.MediaType
 import mai.project.cameraxapp.utils.Method
 import mai.project.cameraxapp.utils.Method.drawable
 import mai.project.cameraxapp.utils.Method.showToast
-import java.text.SimpleDateFormat
-import java.util.Locale
 
-class CaptureVideoDemoFragment : Fragment() {
-    private var _binding: FragmentCaptureVideoDemoBinding? = null
-    private val binding get() = _binding!!
-
+class CaptureVideoDemoFragment : BaseFragment<FragmentCaptureVideoDemoBinding>(
+    FragmentCaptureVideoDemoBinding::inflate
+) {
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCaptureVideoDemoBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    override fun FragmentCaptureVideoDemoBinding.destroy() {}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun FragmentCaptureVideoDemoBinding.initialize(view: View, savedInstanceState: Bundle?) {
         startCamera()
-        setListener()
+    }
+
+    override fun FragmentCaptureVideoDemoBinding.setListener() {
+        imgCapture.setOnClickListener { captureVideo() }
     }
 
     /**
@@ -98,13 +81,6 @@ class CaptureVideoDemoFragment : Fragment() {
     }
 
     /**
-     * 設定監聽器
-     */
-    private fun setListener() = with(binding) {
-        imgCapture.setOnClickListener { captureVideo() }
-    }
-
-    /**
      * 擷取影片
      */
     private fun captureVideo() {
@@ -124,24 +100,10 @@ class CaptureVideoDemoFragment : Fragment() {
             binding.imgCapture.isEnabled = true
             return
         }
-
-        // 命名檔案
-        val name = SimpleDateFormat(Constants.FILENAME_FORMAT, Locale.getDefault())
-            .format(System.currentTimeMillis())
-
-        // 定義檔案格式
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, Constants.VIDEO_MIME_TYPE)
-            // 大於 Android 9 使用 相簿儲存路徑
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Constants.VIDEO_STORAGE_PATH)
-        }
-
         // 定義輸出選項
         val outputOptions = MediaStoreOutputOptions
             .Builder(requireContext().contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-            .setContentValues(contentValues)
+            .setContentValues(Method.createMediaFileFormater(MediaType.VIDEO))
             .build()
 
         // 開始錄影並監聽事件，最後儲存檔案

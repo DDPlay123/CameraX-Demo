@@ -1,12 +1,17 @@
 package mai.project.cameraxapp.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import mai.project.cameraxapp.BuildConfig
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * 常用方法
@@ -32,9 +37,40 @@ object Method {
         message: String,
         tr: Throwable? = null,
         tag: String? = null
-    ){
-        if(BuildConfig.DEBUG) {
+    ) {
+        if (BuildConfig.DEBUG) {
             Log.e(tag ?: getClassName(), message, tr)
+        }
+    }
+
+    /**
+     * 建立檔案名稱
+     */
+    fun createFileName(): String {
+        return SimpleDateFormat(Constants.FILENAME_FORMAT, Locale.getDefault())
+            .format(System.currentTimeMillis())
+    }
+
+    /**
+     * 建立媒體檔案格式
+     */
+    fun createMediaFileFormater(
+        mediaType: MediaType
+    ): ContentValues {
+        val mimeType = when (mediaType) {
+            MediaType.IMAGE -> Constants.IMAGE_MIME_TYPE
+            MediaType.VIDEO -> Constants.VIDEO_MIME_TYPE
+        }
+        val paths = when (mediaType) {
+            MediaType.IMAGE -> Constants.IMAGE_STORAGE_PATH
+            MediaType.VIDEO -> Constants.VIDEO_STORAGE_PATH
+        }
+        return ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, createFileName())
+            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            // 大於 Android 9 使用 相簿儲存路徑
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, paths)
         }
     }
 
@@ -56,7 +92,7 @@ object Method {
      * 取得類別名稱
      */
     private fun getClassName(): String {
-        val className = Throwable().stackTrace[2].className
+        val className = Throwable().stackTrace[3].className
         return className.substringAfterLast('.')
     }
 }

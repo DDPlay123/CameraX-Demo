@@ -1,13 +1,8 @@
 package mai.project.cameraxapp.fragments
 
-import android.content.ContentValues
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
@@ -17,45 +12,34 @@ import androidx.camera.core.UseCaseGroup
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import mai.project.cameraxapp.R
+import mai.project.cameraxapp.base.BaseFragment
 import mai.project.cameraxapp.databinding.FragmentTakePhotoDemoBinding
-import mai.project.cameraxapp.utils.Constants
 import mai.project.cameraxapp.utils.LuminosityAnalyzer
+import mai.project.cameraxapp.utils.MediaType
 import mai.project.cameraxapp.utils.Method
 import mai.project.cameraxapp.utils.Method.showToast
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class TakePhotoDemoFragment : Fragment() {
-    private var _binding: FragmentTakePhotoDemoBinding? = null
-    private val binding get() = _binding!!
-
+class TakePhotoDemoFragment : BaseFragment<FragmentTakePhotoDemoBinding>(
+    FragmentTakePhotoDemoBinding::inflate
+) {
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTakePhotoDemoBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun FragmentTakePhotoDemoBinding.destroy() {
         // 強制停止 ExecutorService
         cameraExecutor.shutdown()
-        _binding = null
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun FragmentTakePhotoDemoBinding.initialize(view: View, savedInstanceState: Bundle?) {
         // 使用單一執行緒來擷取圖像
         cameraExecutor = Executors.newSingleThreadExecutor()
         startCamera()
-        setListener()
+    }
+
+    override fun FragmentTakePhotoDemoBinding.setListener() {
+        imgCapture.setOnClickListener { takePhoto() }
     }
 
     /**
@@ -103,6 +87,7 @@ class TakePhotoDemoFragment : Fragment() {
                 val useCaseGroup = UseCaseGroup.Builder()
                     .addUseCase(preview)
                     .addUseCase(imageCapture!!)
+                    .addUseCase(imageAnalyzer)
                     .setViewPort(viewPort)
                     .build()
                 // 綁定用例
@@ -118,38 +103,18 @@ class TakePhotoDemoFragment : Fragment() {
     }
 
     /**
-     * 設定監聽器
-     */
-    private fun setListener() = with(binding) {
-        imgCapture.setOnClickListener { takePhoto() }
-    }
-
-    /**
      * 擷取照片
      */
     private fun takePhoto() {
         // 取得圖像擷取物件
         val imageCapture = imageCapture ?: return
 
-        // 命名檔案
-        val name = SimpleDateFormat(Constants.FILENAME_FORMAT, Locale.getDefault())
-            .format(System.currentTimeMillis())
-
-        // 定義檔案格式
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, Constants.IMAGE_MIME_TYPE)
-            // 大於 Android 9 使用 相簿儲存路徑
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Constants.IMAGE_STORAGE_PATH)
-        }
-
         // 定義輸出選項
         val outputOptions = ImageCapture.OutputFileOptions
             .Builder(
                 requireContext().contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues
+                Method.createMediaFileFormater(MediaType.IMAGE)
             )
             .build()
 

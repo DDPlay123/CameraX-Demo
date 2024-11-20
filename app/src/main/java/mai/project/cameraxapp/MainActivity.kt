@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -12,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.snackbar.Snackbar
 import mai.project.cameraxapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -27,12 +29,18 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var navHostFragment: NavHostFragment
 
+    /**
+     * 記錄返回鍵按下時間
+     */
+    private var backPressedTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
         setupWindowPadding()
         doInitialized()
+        setBackPress()
     }
 
     override fun onRequestPermissionsResult(
@@ -71,6 +79,28 @@ class MainActivity : AppCompatActivity() {
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
+    }
+
+    /**
+     * 設定返回鍵事件
+     *
+     * 讓使用者在 3 秒內按下兩次返回鍵才能退出程式
+     */
+    private fun setBackPress() {
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (backPressedTime + 3000 > System.currentTimeMillis()) {
+                        finish()
+                    } else {
+                        Snackbar.make(binding.root, getString(R.string.press_again_to_exit), Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    backPressedTime = System.currentTimeMillis()
+                }
+            }
+        )
     }
 
     /**
