@@ -13,6 +13,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import androidx.camera.core.UseCaseGroup
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import mai.project.cameraxapp.R
@@ -74,6 +75,7 @@ class TakePhotoDemoFragment : Fragment() {
 
             // 設定圖片擷取物件
             imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY) // 加快拍攝時間，縮減畫質
                 .build()
 
             // 設定相機圖像分析工具
@@ -95,12 +97,19 @@ class TakePhotoDemoFragment : Fragment() {
             try {
                 // 先解除過去綁定的用例
                 cameraProvider.unbindAll()
+                // 獲取 PreviewView 的尺寸，來設置 ViewPort
+                val viewPort = binding.cameraPreview.viewPort ?: return@addListener
+                // 使用 UseCaseGroup 綁定 ViewPort，以確保所有用例保持一致的比例
+                val useCaseGroup = UseCaseGroup.Builder()
+                    .addUseCase(preview)
+                    .addUseCase(imageCapture!!)
+                    .setViewPort(viewPort)
+                    .build()
                 // 綁定用例
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner = this,
                     cameraSelector = cameraSelector,
-                    // useCases
-                    preview, imageCapture, imageAnalyzer
+                    useCaseGroup
                 )
             } catch (e: Exception) {
                 Method.logE(getString(R.string.camera_launch_error), e)
