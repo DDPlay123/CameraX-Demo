@@ -33,6 +33,7 @@ class TakeSpecificAreaPictureFragment : BaseFragment<FragmentTakeSpecificAreaPic
     }
 
     override fun FragmentTakeSpecificAreaPictureBinding.initialize(view: View, savedInstanceState: Bundle?) {
+        overLay.setInitialRegion(.25f, .25f, .75f, .75f)
         startCamera()
     }
 
