@@ -3,6 +3,7 @@ package mai.project.cameraxapp.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.VelocityTracker
@@ -40,7 +41,16 @@ class DownToCloseImageView @JvmOverloads constructor(
         addView(imageView)
     }
 
-    fun setBitmap(bitmap: Bitmap) {
+    fun setImage(uri: Uri) {
+        imageView.setImageURI(uri)
+        resetPosition() // 重置位置
+        visibility = VISIBLE // 當有圖片時顯示容器
+        imageView.visibility = VISIBLE
+        backgroundAlpha = 1.0f
+        setBackgroundColor(0xFF000000.toInt()) // 設定背景為完全不透明
+    }
+
+    fun setImage(bitmap: Bitmap) {
         imageView.setImageBitmap(bitmap)
         resetPosition() // 重置位置
         visibility = VISIBLE // 當有圖片時顯示容器
@@ -49,7 +59,8 @@ class DownToCloseImageView @JvmOverloads constructor(
         setBackgroundColor(0xFF000000.toInt()) // 設定背景為完全不透明
     }
 
-    fun clearBitmap() {
+    fun clearImage() {
+        imageView.setImageURI(null)
         imageView.setImageBitmap(null)
         imageView.visibility = GONE // 當沒有圖片時隱藏圖片
         visibility = GONE // 當沒有圖片時隱藏容器
@@ -94,7 +105,7 @@ class DownToCloseImageView @JvmOverloads constructor(
                     imageView.animate().translationY(height.toFloat())
                         .setInterpolator(AccelerateDecelerateInterpolator())
                         .setDuration(300)
-                        .withEndAction { clearBitmap() }
+                        .withEndAction { clearImage() }
                         .start()
                 } else {
                     imageView.animate().translationY(0f)

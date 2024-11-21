@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -140,6 +141,17 @@ class OverlayView @JvmOverloads constructor(
     fun setIsFixed(isFixed: Boolean) {
         this.isFixed = isFixed
         invalidate()
+    }
+
+    /**
+     * 取得矩形的 CropRect 位置
+     */
+    fun getCropRect(): Rect {
+        val left = this.left.toInt()
+        val top = this.top.toInt()
+        val right = this.right.toInt()
+        val bottom = this.bottom.toInt()
+        return Rect(left, top, right, bottom)
     }
 
     override fun onDraw(canvas: Canvas) {
