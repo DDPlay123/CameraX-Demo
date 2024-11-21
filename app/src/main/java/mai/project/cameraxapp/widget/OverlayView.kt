@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -47,6 +49,11 @@ class OverlayView @JvmOverloads constructor(
         private const val CORNER_COLOR = Color.BLUE
 
         /**
+         * 背景顏色
+         */
+        private const val BACKGROUND_COLOR = 0x66000000
+
+        /**
          * 最小寬度，避免矩形太小
          */
         private const val MIN_WIDTH = 100
@@ -59,6 +66,10 @@ class OverlayView @JvmOverloads constructor(
         TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
     }
 
+    init {
+        setBackgroundColor(BACKGROUND_COLOR)
+    }
+
     // 矩形初始位置
     private var left: Float = 100f
     private var top: Float = 100f
@@ -68,7 +79,12 @@ class OverlayView @JvmOverloads constructor(
     // 是否要固定矩形大小 且 不可控制
     private var isFixed = false
 
-    // 邊框繪筆
+    // 矩形背景繪筆 (由於View背景已設顏色，所以背景需要額外繪製)
+    private val backgroundPaint = Paint().apply {
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+    }
+
+    // 矩形邊框繪筆
     private val borderPaint = Paint().apply {
         style = Paint.Style.STROKE
         color = BORDER_COLOR
@@ -129,6 +145,7 @@ class OverlayView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         // 繪製矩形
+        canvas.drawRect(left, top, right, bottom, backgroundPaint)
         canvas.drawRect(left, top, right, bottom, borderPaint)
 
         if (!isFixed) {
