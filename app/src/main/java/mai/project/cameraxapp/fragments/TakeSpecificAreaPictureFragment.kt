@@ -19,6 +19,7 @@ import mai.project.cameraxapp.R
 import mai.project.cameraxapp.base.BaseFragment
 import mai.project.cameraxapp.databinding.FragmentTakeSpecificAreaPictureBinding
 import mai.project.cameraxapp.utils.Method
+import mai.project.cameraxapp.utils.Method.DP
 import mai.project.cameraxapp.utils.Method.showToast
 import java.io.File
 
@@ -32,15 +33,15 @@ class TakeSpecificAreaPictureFragment : BaseFragment<FragmentTakeSpecificAreaPic
     }
 
     override fun FragmentTakeSpecificAreaPictureBinding.initialize(view: View, savedInstanceState: Bundle?) {
-        overLay.setInitialRegion(.25f, .25f, .75f, .75f)
         startCamera()
+        calculateOverlayRegion()
     }
 
     override fun FragmentTakeSpecificAreaPictureBinding.setListener() {
         imgCapture.setOnClickListener { takePhoto() }
 
         swOverlay.setOnCheckedChangeListener { _, isChecked ->
-            overLay.isVisible = isChecked
+            overlay.isVisible = isChecked
         }
     }
 
@@ -99,6 +100,58 @@ class TakeSpecificAreaPictureFragment : BaseFragment<FragmentTakeSpecificAreaPic
     }
 
     /**
+     * 計算 Overlay 的區域
+     */
+    private fun calculateOverlayRegion() = with(binding) {
+        cameraPreview.post {
+            // 確保寬高比為 7:10
+            val aspectRatio = 7f / 10f
+
+            // 預覽畫面的寬高
+            val previewWidth = cameraPreview.width.toFloat()
+            val previewHeight = cameraPreview.height.toFloat()
+
+            // 擷取按鈕的尺寸（寬高是相同的）
+            val imgCaptureSize = imgCapture.height.toFloat()
+
+            // 擷取按鈕上下需要預留的空間
+            val imgCaptureMargin = 72f.DP
+
+            // 距離頂部的偏移量
+            val topMargin = 70f.DP
+
+            // 可用的最大高度：排除頂部偏移和底部的按鈕與邊距
+            val maxAvailableHeight = previewHeight - topMargin - imgCaptureSize - imgCaptureMargin
+
+            // 初步計算寬高，先以高度為基準
+            var overlayHeight = maxAvailableHeight
+            var overlayWidth = overlayHeight * aspectRatio
+
+            // 如果寬度超出可用寬度，改用寬度為基準
+            if (overlayWidth > previewWidth) {
+                overlayWidth = previewWidth
+                overlayHeight = overlayWidth / aspectRatio
+            }
+
+            // 計算 top 和 bottom
+            val top = topMargin / previewHeight // 距離頂部的百分比
+            val bottom = top + overlayHeight / previewHeight // 底部的百分比
+
+            // 計算 left 和 right
+            val left = ((previewWidth - overlayWidth) / 2) / previewWidth
+            val right = 1 - left
+
+            // 設置 Overlay 的初始區域
+            overlay.setInitialRegion(
+                leftRatio = left,
+                topRatio = top,
+                rightRatio = right,
+                bottomRatio = bottom
+            )
+        }
+    }
+
+    /**
      * 擷取照片
      */
     private fun takePhoto() {
@@ -146,7 +199,7 @@ class TakeSpecificAreaPictureFragment : BaseFragment<FragmentTakeSpecificAreaPic
         // CameraX 的 Preview 元件
         val preview = binding.cameraPreview
         // Overlay 的 元件
-        val overlay = binding.overLay
+        val overlay = binding.overlay
 
         // 從 savedUri 獲取 Bitmap
         val inputStream = requireContext().contentResolver.openInputStream(savedUri)

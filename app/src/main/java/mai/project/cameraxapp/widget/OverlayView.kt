@@ -124,15 +124,13 @@ class OverlayView @JvmOverloads constructor(
         rightRatio: Float,
         @FloatRange(from = 0.0, to = 1.0)
         bottomRatio: Float
-    ) {
+    ) = post {
         // 將相對比例轉換為實際位置
-        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            left = (width * leftRatio).coerceIn(0f, width.toFloat())
-            top = (height * topRatio).coerceIn(0f, height.toFloat())
-            right = (width * rightRatio).coerceIn(0f, width.toFloat())
-            bottom = (height * bottomRatio).coerceIn(0f, height.toFloat())
-            invalidate()
-        }
+        left = (width * leftRatio).coerceIn(0f, width.toFloat())
+        top = (height * topRatio).coerceIn(0f, height.toFloat())
+        right = (width * rightRatio).coerceIn(0f, width.toFloat())
+        bottom = (height * bottomRatio).coerceIn(0f, height.toFloat())
+        invalidate()
     }
 
     /**

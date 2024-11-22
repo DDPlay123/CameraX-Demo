@@ -51,5 +51,4 @@ dependencies {
 
     implementation(libs.bundles.navigation)
     implementation(libs.bundles.camerax)
-    implementation(libs.androidx.window)
 }

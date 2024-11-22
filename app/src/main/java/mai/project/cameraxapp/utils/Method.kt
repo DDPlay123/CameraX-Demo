@@ -2,11 +2,13 @@ package mai.project.cameraxapp.utils
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
@@ -129,6 +131,16 @@ object Method {
     fun Context.drawable(@DrawableRes resId: Int): Drawable? {
         return ContextCompat.getDrawable(this, resId)
     }
+
+    /**
+     * 將 Int 轉換為 DP
+     */
+    val Float.DP
+        get() = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this,
+            Resources.getSystem().displayMetrics
+        ).toInt()
 
     /**
      * 取得類別名稱
