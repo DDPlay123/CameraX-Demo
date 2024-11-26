@@ -9,6 +9,8 @@ import mai.project.cameraxapp.databinding.FragmentFirstStartBinding
 class FirstStartFragment : BaseFragment<FragmentFirstStartBinding>(
     FragmentFirstStartBinding::inflate
 ) {
+    override val useActivityOnBackPressed: Boolean = true
+
     override fun FragmentFirstStartBinding.destroy() {}
 
     override fun FragmentFirstStartBinding.initialize(view: View, savedInstanceState: Bundle?) {}
